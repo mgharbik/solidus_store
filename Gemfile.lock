@@ -1,4 +1,17 @@
 GIT
+  remote: git://github.com/solidusio-contrib/solidus_i18n.git
+  revision: 650ba4bbb539513e4d3617c17a2e8af0f2f4c737
+  branch: master
+  specs:
+    solidus_i18n (1.0.0)
+      deface (~> 1.0)
+      i18n_data (~> 0.7.0)
+      kaminari-i18n (~> 0.3.2)
+      rails-i18n (~> 4.0.1)
+      routing-filter (~> 0.5.0)
+      solidus_core (~> 1.0)
+
+GIT
   remote: git://github.com/solidusio/solidus.git
   revision: 825ab6bae645a12f2fc3a5f60dd3113fcd4c96fd
   branch: master
@@ -177,6 +190,7 @@ GEM
     highline (1.6.21)
     htmlentities (4.3.4)
     i18n (0.7.0)
+    i18n_data (0.7.0)
     jbuilder (2.3.2)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -190,6 +204,9 @@ GEM
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    kaminari-i18n (0.3.2)
+      kaminari
+      rails
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -245,6 +262,9 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rails-i18n (4.0.8)
+      i18n (~> 0.7)
+      railties (~> 4.0)
     railties (4.2.5)
       actionpack (= 4.2.5)
       activesupport (= 4.2.5)
@@ -260,6 +280,9 @@ GEM
     rdoc (4.2.0)
     responders (2.1.1)
       railties (>= 4.2.0, < 5.1)
+    routing-filter (0.5.1)
+      actionpack (~> 4.2)
+      activesupport (~> 4.2)
     sass (3.4.20)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
@@ -331,6 +354,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   solidus!
   solidus_auth_devise!
+  solidus_i18n!
   spring
   sqlite3
   turbolinks
