@@ -231,6 +231,7 @@ GEM
       mime-types
     paranoia (2.1.5)
       activerecord (~> 4.0)
+    pg (0.18.4)
     polyamorous (1.3.0)
       activerecord (>= 3.0)
     polyglot (0.3.5)
@@ -306,7 +307,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    sqlite3 (1.3.11)
     state_machines (0.4.0)
     state_machines-activemodel (0.3.0)
       activemodel (~> 4.1)
@@ -355,6 +355,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   jbuilder (~> 2.0)
   jquery-rails
+  pg
   rails (= 4.2.5)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
@@ -362,7 +363,6 @@ DEPENDENCIES
   solidus_auth_devise!
   solidus_i18n!
   spring
-  sqlite3
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
