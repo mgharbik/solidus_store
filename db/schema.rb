@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113080320) do
+ActiveRecord::Schema.define(version: 20160126144844) do
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -993,6 +993,15 @@ ActiveRecord::Schema.define(version: 20160113080320) do
   add_index "spree_tax_rates", ["deleted_at"], name: "index_spree_tax_rates_on_deleted_at"
   add_index "spree_tax_rates", ["tax_category_id"], name: "index_spree_tax_rates_on_tax_category_id"
   add_index "spree_tax_rates", ["zone_id"], name: "index_spree_tax_rates_on_zone_id"
+
+  create_table "spree_taxon_hierarchies", force: :cascade do |t|
+    t.integer "ancestor_id",   null: false
+    t.integer "descendant_id", null: false
+    t.integer "generations",   null: false
+  end
+
+  add_index "spree_taxon_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "spree_taxon_anc_desc_idx", unique: true
+  add_index "spree_taxon_hierarchies", ["descendant_id"], name: "spree_taxon_desc_idx"
 
   create_table "spree_taxonomies", force: :cascade do |t|
     t.string   "name",                   null: false

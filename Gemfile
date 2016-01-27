@@ -45,6 +45,6 @@ group :development do
   gem 'spring'
 end
 
-gem 'solidus', github: 'solidusio/solidus', branch: 'master'
+gem 'solidus', github: 'simo163/solidus', branch: 'switching-to-closure-tree'
 gem 'solidus_auth_devise', github: 'solidusio/solidus_auth_devise', branch: 'master'
 gem 'solidus_i18n', github: 'solidusio-contrib/solidus_i18n', branch: 'master'
