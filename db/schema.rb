@@ -1003,8 +1003,8 @@ ActiveRecord::Schema.define(version: 20160126144844) do
     t.integer "generations",   null: false
   end
 
-  add_index "spree_taxon_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "spree_taxon_anc_desc_idx", unique: true
-  add_index "spree_taxon_hierarchies", ["descendant_id"], name: "spree_taxon_desc_idx"
+  add_index "spree_taxon_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "spree_taxon_anc_desc_idx", unique: true, using: :btree
+  add_index "spree_taxon_hierarchies", ["descendant_id"], name: "spree_taxon_desc_idx", using: :btree
 
   create_table "spree_taxonomies", force: :cascade do |t|
     t.string   "name",                   null: false
