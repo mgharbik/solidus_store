@@ -24,8 +24,9 @@ end
 group :development do
   gem 'web-console', '~> 2.0'
   gem 'spring'
+  gem 'meta_request'
 end
 
-gem 'solidus', github: 'solidusio/solidus', branch: 'master'
+gem 'solidus', github: 'simo163/solidus', branch: 'switching-to-acts_as_ordered_tree'
 gem 'solidus_auth_devise', github: 'solidusio/solidus_auth_devise', branch: 'master'
 gem 'solidus_i18n', github: 'solidusio-contrib/solidus_i18n', branch: 'master'
