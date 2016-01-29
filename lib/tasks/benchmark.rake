@@ -2,15 +2,16 @@ require 'benchmark'
 
 namespace :benchmark do
 
+  # 4 levels, 30 nodes in each, total 27_931 nodes
   LEVELS = 4
-  TAXONS_IN_LEVEL = 10
-  ITERATIONS = 10
+  TAXONS_IN_LEVEL = 30
+
 
   desc 'Create taxons'
   task create_taxons: :environment do
-    Benchmark.bmbm do |bm|
+    Benchmark.bm do |bm|
       bm.report('Generating the tree') do
-        taxonomy = Spree::Taxonomy.create!(name: "taxonomy test")
+        taxonomy = Spree::Taxonomy.create!(name: "benchmark")
         parent = taxonomy.root
         level = 1
 
@@ -30,137 +31,123 @@ namespace :benchmark do
       end
     end
   end
-  # AWESOME NESTED TREE, 10 levels, 2 nodes in each, total 2046 nodes
-  # Rehearsal -------------------------------------------------------
-  # Generating the tree  12.400000   0.530000  12.930000 ( 18.950261)
-  # --------------------------------------------- total: 12.930000sec
-  #
-  # user     system      total        real
-  # Generating the tree  12.180000   0.480000  12.660000 ( 18.830448)
+  ######################## AWESOME NESTED TREE ########################
+  #                              user     system      total        real
+  # Generating the tree   341.430000  12.840000 354.270000 (765.117659) 12.75196098333333 min
 
-  # AWESOME NESTED TREE, 4 levels, 10 nodes in each, total 2222 nodes
-  # Rehearsal -------------------------------------------------------
-  # Generating the tree  13.290000   0.540000  13.830000 ( 19.043550)
-  # --------------------------------------------- total: 13.830000sec
-  #
-  # user     system      total        real
-  # Generating the tree  13.050000   0.500000  13.550000 ( 19.592345)
+  ######################## CLOSURE TREE ###############################
+  #                              user     system      total        real
+  # Generating the tree   249.890000   9.390000 259.280000 (367.055578) 6.11759296666667 min
+
+  ######################## Adjacency List #############################
+  #                              user     system      total        real
+  # Generating the tree   691.820000  10.810000 702.630000 (900.876022) 15.01460036666667 min
 
 
-  #
-  # CLOSURE TREE, 10 levels, 2 nodes in each, total 2046 nodes
-  # Rehearsal -------------------------------------------------------
-  # Generating the tree   9.530000   0.410000   9.940000 ( 15.795836)
-  # ---------------------------------------------- total: 9.940000sec
-  #
-  #                           user     system      total        real
-  # Generating the tree   9.110000   0.350000   9.460000 ( 12.666454)
-
-  # CLOSURE TREE, 4 levels, 10 nodes in each, total 2222 nodes
-  # Rehearsal -------------------------------------------------------
-  # Generating the tree   9.690000   0.390000  10.080000 ( 13.550858)
-  # --------------------------------------------- total: 10.080000sec
-  #
-  # user     system      total        real
-  # Generating the tree   9.610000   0.380000   9.990000 ( 13.744228)
-
-  desc 'Move taxons'
-  task move_taxons: :environment do
-    Benchmark.bmbm do |bm|
-      bm.report('Moving taxons') do
-        taxonomy = Spree::Taxonomy.last
-        ITERATIONS.times do |i|
-          parent = taxonomy.reload.root.children.first
-          taxon = taxonomy.reload.root.children.last
-          self.move_taxon(parent, taxon)
-
-          parent = taxonomy.reload.root
-          taxon = taxonomy.reload.root.children.first
-          self.move_taxon(parent, taxon)
-
-          puts i
-        end
+  desc 'Display all taxons'
+  task display_tree: :environment do
+    Benchmark.bm do |bm|
+      bm.report('Displaying tree') do
+        taxonomy = Spree::Taxonomy.find_by(name: "benchmark")
+        parent = taxonomy.root
+        self.display_all_children(parent)
       end
     end
   end
 
-  def self.move_taxon(parent, taxon, position=0)
-    taxon.parent = parent
-    taxon.child_index = position
-
-    taxon.save!
-
-    taxon.reload
-    taxon.set_permalink
-    taxon.save!
-
-    taxon.descendants.each do |descendant|
-      descendant.reload
-      descendant.set_permalink
-      descendant.save!
+  def self.display_all_children(parent)
+    children = parent.children
+    if children.any?
+      children.each do |child|
+        self.display_all_children(child)
+      end
+    else
+      parent.name
     end
   end
-  # AWESOME NESTED TREE
+  ##################### AWESOME NESTED TREE ####################
+  #                       user     system      total        real
+  # Displaying tree  15.830000   0.620000  16.450000 ( 17.845013)
 
-  #
-  # CLOSURE TREE, 10 levels, 2 nodes in each, 20 operations
-  # Rehearsal -------------------------------------------------
-  # Moving taxons 108.530000   4.390000 112.920000 (172.196368)
-  # -------------------------------------- total: 112.920000sec
-  #
-  #                     user     system      total        real
-  # Moving taxons 103.740000   4.100000 107.840000 (151.867194)
+  ##################### CLOSURE TREE ###########################
+  #                       user     system      total        real
+  # Displaying tree  20.530000   0.640000  21.170000 ( 22.585553)
 
-  # CLOSURE TREE, 4 levels, 10 nodes in each, 20 operations
-  # Rehearsal -------------------------------------------------
-  # Moving taxons 22.310000   0.850000  23.160000 ( 31.205913)
-  # --------------------------------------- total: 23.160000sec
-  #
-  # user     system      total        real
-  # Moving taxons 33.150000   1.240000  34.390000 ( 46.282565)
+  ##################### Adjacency List #########################
+  #                       user     system      total        real
+  # Displaying tree  39.620000   0.830000  40.450000 ( 42.714692)
 
-  desc 'Remove taxons'
-  task remove_taxons: :environment do
-    Benchmark.bmbm do |bm|
-      bm.report('Removing taxons') do
-        count = Spree::Taxon.count
-        Spree::Taxon.take(1000).each do |taxon|
-          taxon.destroy!
-        end
+
+  desc 'Insert a new taxon'
+  task insert_taxon: :environment do
+    Benchmark.bm do |bm|
+      bm.report('Inserting taxon') do
+        taxonomy = Spree::Taxonomy.find_by(name: "benchmark")
+        parent = taxonomy.root
+
+        taxon = Spree::Taxon.new(name: "New node", parent_id: parent.id, child_index: 0)
+        taxon.taxonomy_id = taxonomy.id
+        taxon.save!
       end
     end
   end
-  # AWESOME NESTED TREE, 10 levels, 2 nodes in each, total 2000 nodes destroyed
-  # Rehearsal ---------------------------------------------------
-  # Removing taxons   4.880000   0.270000   5.150000 (  8.913004)
-  # ------------------------------------------ total: 5.150000sec
-  #
-  # user     system      total        real
-  # Removing taxons   0.000000   0.000000   0.000000 (  0.003072)
+  ##################### AWESOME NESTED TREE ####################
+  #                       user     system      total        real
+  # Inserting taxon  0.070000   0.000000   0.070000 (  0.118796)
 
-  # AWESOME NESTED TREE, 4 levels, 10 nodes in each, total 2000 nodes destroyed
-  # Rehearsal ---------------------------------------------------
-  # Removing taxons   3.890000   0.220000   4.110000 ( 28.071545)
-  # ------------------------------------------ total: 4.110000sec
-  #
-  # user     system      total        real
-  # Removing taxons   3.480000   0.190000   3.670000 (  8.643678)
+  ##################### CLOSURE TREE ###########################
+  #                       user     system      total        real
+  # Inserting taxon  0.090000   0.020000   0.110000 (  0.133249)
 
-  #
-  #
-  # CLOSURE TREE, 10 levels, 2 nodes in each, total 2000 nodes destroyed
-  # Rehearsal ---------------------------------------------------
-  # Removing taxons   5.240000   0.240000   5.480000 (  5.636259)
-  # ------------------------------------------ total: 5.480000sec
-  #
-  # user     system      total        real
-  # Removing taxons   5.390000   0.240000   5.630000 (  5.830917)
+  ##################### Adjacency List #########################
+  #                       user     system      total        real
+  # Inserting taxon  0.090000   0.010000   0.100000 (  0.109642)
 
-  # CLOSURE TREE, 4 levels, 10 nodes in each, total 2000 nodes destroyed
-  # Rehearsal ---------------------------------------------------
-  # Removing taxons   6.830000   0.310000   7.140000 (  7.178417)
-  # ------------------------------------------ total: 7.140000sec
-  #
-  # user     system      total        real
-  # Removing taxons   6.530000   0.290000   6.820000 (  6.829724)
+
+  desc 'Move a taxon'
+  task move_taxon: :environment do
+    Benchmark.bm do |bm|
+      bm.report('Moving a taxon') do
+        taxonomy = Spree::Taxonomy.find_by(name: "benchmark")
+        parent = taxonomy.root.children.first
+        node = taxonomy.root.descendants.last
+
+        node.update_attributes!(parent_id: parent.id, child_index: 0)
+      end
+    end
+  end
+  ################### AWESOME NESTED TREE ####################
+  #                      user     system      total        real
+  # Moving a taxon  0.080000   0.010000   0.090000 (  1.653846)
+
+  ################### CLOSURE TREE ###########################
+  #                      user     system      total        real
+  # Moving a taxon  0.120000   0.020000   0.140000 (  0.199836)
+
+  ################### Adjacency List #########################
+  #                      user     system      total        real
+  # Moving a taxon  0.100000   0.010000   0.110000 (  0.203947)
+
+
+  desc 'Remove a taxon'
+  task remove_taxon: :environment do
+    Benchmark.bm do |bm|
+      bm.report('Removing a taxon') do
+        taxonomy = Spree::Taxonomy.find_by(name: "benchmark")
+        node = taxonomy.root.children.first
+        node.destroy!
+      end
+    end
+  end
+  ################### AWESOME NESTED TREE ####################
+  #                      user     system      total        real
+  # Removing a taxon  1.020000   0.060000   1.080000 (  3.554831)
+
+  ################### CLOSURE TREE ###########################
+  #                      user     system      total        real
+  # Removing a taxon  0.090000   0.020000   0.110000 (  0.125421)
+
+  ################### Adjacency List #########################
+  #                      user     system      total        real
+  # Removing a taxon  0.080000   0.010000   0.090000 (  0.101363)
 end
