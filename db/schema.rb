@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113080320) do
+ActiveRecord::Schema.define(version: 20160201141509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -784,6 +784,35 @@ ActiveRecord::Schema.define(version: 20160113080320) do
 
   add_index "spree_shipping_rates", ["shipment_id", "shipping_method_id"], name: "spree_shipping_rates_join_index", unique: true, using: :btree
 
+  create_table "spree_slide_locations", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "spree_slide_slide_locations", force: :cascade do |t|
+    t.integer "slide_id"
+    t.integer "slide_location_id"
+  end
+
+  add_index "spree_slide_slide_locations", ["slide_id"], name: "index_spree_slide_slide_locations_on_slide_id", using: :btree
+  add_index "spree_slide_slide_locations", ["slide_location_id"], name: "index_spree_slide_slide_locations_on_slide_location_id", using: :btree
+
+  create_table "spree_slides", force: :cascade do |t|
+    t.string   "name"
+    t.text     "body"
+    t.string   "link_url"
+    t.boolean  "published"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "position",           default: 0, null: false
+    t.integer  "product_id"
+  end
+
   create_table "spree_state_changes", force: :cascade do |t|
     t.string   "name"
     t.string   "previous_state"
@@ -996,6 +1025,15 @@ ActiveRecord::Schema.define(version: 20160113080320) do
   add_index "spree_tax_rates", ["deleted_at"], name: "index_spree_tax_rates_on_deleted_at", using: :btree
   add_index "spree_tax_rates", ["tax_category_id"], name: "index_spree_tax_rates_on_tax_category_id", using: :btree
   add_index "spree_tax_rates", ["zone_id"], name: "index_spree_tax_rates_on_zone_id", using: :btree
+
+  create_table "spree_taxon_hierarchies", force: :cascade do |t|
+    t.integer "ancestor_id",   null: false
+    t.integer "descendant_id", null: false
+    t.integer "generations",   null: false
+  end
+
+  add_index "spree_taxon_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "spree_taxon_anc_desc_idx", unique: true, using: :btree
+  add_index "spree_taxon_hierarchies", ["descendant_id"], name: "spree_taxon_desc_idx", using: :btree
 
   create_table "spree_taxonomies", force: :cascade do |t|
     t.string   "name",                   null: false

@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/simo163/solidus_slider.git
+  revision: bd70b916ae7ede25b9b2c313c2bc140230c6e735
+  branch: master
+  specs:
+    solidus_slider (1.1.1)
+      solidus_backend (>= 1.1.0.alpha, < 2)
+      solidus_core (>= 1.1.0.alpha, < 2)
+
+GIT
   remote: git://github.com/solidusio-contrib/solidus_i18n.git
   revision: 650ba4bbb539513e4d3617c17a2e8af0f2f4c737
   branch: master
@@ -356,6 +365,7 @@ DEPENDENCIES
   solidus!
   solidus_auth_devise!
   solidus_i18n!
+  solidus_slider!
   spring
   turbolinks
   uglifier (>= 1.3.0)
