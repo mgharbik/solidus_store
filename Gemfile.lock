@@ -8,6 +8,16 @@ GIT
       solidus_core (>= 1.1.0.alpha, < 2)
 
 GIT
+  remote: git://github.com/solidusio-contrib/solidus_globalize.git
+  revision: 6dc8f65b1ac08a154e57945a9b3723e3d0b3ed07
+  branch: master
+  specs:
+    solidus_globalize (3.1.0.beta)
+      friendly_id-globalize
+      globalize (~> 5.0.1)
+      solidus_i18n (~> 1.0)
+
+GIT
   remote: git://github.com/solidusio-contrib/solidus_i18n.git
   revision: 650ba4bbb539513e4d3617c17a2e8af0f2f4c737
   branch: master
@@ -189,8 +199,13 @@ GEM
       railties (>= 3.2, < 5.0)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
+    friendly_id-globalize (1.0.0.alpha2)
+      friendly_id (~> 5.1.0, < 6.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
+    globalize (5.0.1)
+      activemodel (>= 4.2.0, < 4.3)
+      activerecord (>= 4.2.0, < 4.3)
     handlebars_assets (0.19.1)
       execjs (>= 1.2.9)
       multi_json
@@ -364,6 +379,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   solidus!
   solidus_auth_devise!
+  solidus_globalize!
   solidus_i18n!
   solidus_slider!
   spring

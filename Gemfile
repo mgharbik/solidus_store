@@ -29,4 +29,5 @@ end
 gem 'solidus', github: 'solidusio/solidus', branch: 'master'
 gem 'solidus_auth_devise', github: 'solidusio/solidus_auth_devise', branch: 'master'
 gem 'solidus_i18n', github: 'solidusio-contrib/solidus_i18n', branch: 'master'
+gem 'solidus_globalize', github: 'solidusio-contrib/solidus_globalize', branch: 'master'
 gem 'solidus_slider', github: 'simo163/solidus_slider', branch: 'master'
