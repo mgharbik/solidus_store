@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160219135239) do
+ActiveRecord::Schema.define(version: 20160222142360) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -827,6 +827,16 @@ ActiveRecord::Schema.define(version: 20160219135239) do
   add_index "spree_shipping_method_categories", ["shipping_category_id", "shipping_method_id"], name: "unique_spree_shipping_method_categories", unique: true, using: :btree
   add_index "spree_shipping_method_categories", ["shipping_method_id"], name: "index_spree_shipping_method_categories_on_shipping_method_id", using: :btree
 
+  create_table "spree_shipping_method_stock_locations", force: :cascade do |t|
+    t.integer  "shipping_method_id"
+    t.integer  "stock_location_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "spree_shipping_method_stock_locations", ["shipping_method_id"], name: "shipping_method_id_spree_sm_sl", using: :btree
+  add_index "spree_shipping_method_stock_locations", ["stock_location_id"], name: "sstock_location_id_spree_sm_sl", using: :btree
+
   create_table "spree_shipping_method_translations", force: :cascade do |t|
     t.integer  "spree_shipping_method_id", null: false
     t.string   "locale",                   null: false
@@ -855,6 +865,9 @@ ActiveRecord::Schema.define(version: 20160219135239) do
     t.string   "admin_name"
     t.integer  "tax_category_id"
     t.string   "code"
+    t.boolean  "available_to_all", default: true
+    t.string   "carrier"
+    t.string   "service_level"
   end
 
   add_index "spree_shipping_methods", ["tax_category_id"], name: "index_spree_shipping_methods_on_tax_category_id", using: :btree
@@ -1125,15 +1138,6 @@ ActiveRecord::Schema.define(version: 20160219135239) do
   add_index "spree_tax_rates", ["tax_category_id"], name: "index_spree_tax_rates_on_tax_category_id", using: :btree
   add_index "spree_tax_rates", ["zone_id"], name: "index_spree_tax_rates_on_zone_id", using: :btree
 
-  create_table "spree_taxon_hierarchies", force: :cascade do |t|
-    t.integer "ancestor_id",   null: false
-    t.integer "descendant_id", null: false
-    t.integer "generations",   null: false
-  end
-
-  add_index "spree_taxon_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "spree_taxon_anc_desc_idx", unique: true, using: :btree
-  add_index "spree_taxon_hierarchies", ["descendant_id"], name: "spree_taxon_desc_idx", using: :btree
-
   create_table "spree_taxon_translations", force: :cascade do |t|
     t.integer  "spree_taxon_id",   null: false
     t.string   "locale",           null: false
@@ -1359,4 +1363,6 @@ ActiveRecord::Schema.define(version: 20160219135239) do
   add_foreign_key "spree_product_promotion_rules", "spree_promotion_rules", column: "promotion_rule_id"
   add_foreign_key "spree_prototype_taxons", "spree_prototypes", column: "prototype_id"
   add_foreign_key "spree_prototype_taxons", "spree_taxons", column: "taxon_id"
+  add_foreign_key "spree_shipping_method_stock_locations", "spree_shipping_methods", column: "shipping_method_id"
+  add_foreign_key "spree_shipping_method_stock_locations", "spree_stock_locations", column: "stock_location_id"
 end
